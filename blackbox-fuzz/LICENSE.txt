@@ -1,0 +1,48 @@
+
+---
+
+## Step 3: Create the Source Files
+
+Create each file below **inside `blackbox-fuzz/src/`**.
+
+### `src/index.ts`
+
+```typescript
+#!/usr/bin/env node
+
+import { Command } from 'commander';
+import { runFuzzer } from './fuzzer.js';
+import { loadAbi } from './abi.js';
+
+const program = new Command();
+
+program
+  .name('blackbox-fuzz')
+  .description('Black-box fuzzer for Quai smart contracts')
+  .version('0.1.0')
+  .argument('<address>', 'Contract address to fuzz')
+  .option('-z, --zone <zone>', 'Quai zone', 'cyprus1')
+  .option('-r, --rpc <url>', 'RPC endpoint', 'https://orchard.rpc.quai.network')
+  .option('--abi <path>', 'Path to local ABI JSON file')
+  .option('--runs <number>', 'Number of fuzz runs', '100')
+  .option('--seed <number>', 'Random seed for reproducibility')
+  .option('--output <dir>', 'Output directory for artifacts', './fuzz-results')
+  .action(async (address: string, options) => {
+    console.log(`[Blackbox] Target: ${address} on ${options.zone}`);
+
+    const abi = await loadAbi(address, options.zone, options.abi);
+    console.log(`[Blackbox] ABI loaded: ${abi.length} entries`);
+
+    await runFuzzer({
+      address,
+      abi,
+      abiOverridden: !!options.abi,
+      zone: options.zone,
+      rpc: options.rpc,
+      runs: parseInt(options.runs),
+      seed: options.seed ? parseInt(options.seed) : undefined,
+      output: options.output,
+    });
+  });
+
+program.parse();

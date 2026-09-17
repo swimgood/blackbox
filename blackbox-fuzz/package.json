@@ -1,0 +1,28 @@
+{
+  "name": "blackbox-fuzz",
+  "version": "0.1.0",
+  "description": "Black-box fuzzer for Quai smart contracts. No source code required.",
+  "type": "module",
+  "bin": { "blackbox-fuzz": "./dist/index.js" },
+  "main": "./dist/index.js",
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": ["quai", "fuzzer", "smart-contracts", "security", "blackbox"],
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "js-sha3": "^0.9.3",
+    "quais": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": { "node": ">=18" }
+}

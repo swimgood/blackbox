@@ -1,0 +1,1 @@
+npx blackbox-fuzz 0x0015dFe3280783CD9b126D8E0ccc728B6490b2b2 --zone cyprus1
