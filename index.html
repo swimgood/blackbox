@@ -425,56 +425,65 @@
 </head>
 <body>
 
-<!-- ============ HERO ============ -->
-<header class="hero">
-  <!-- Inline SVG logo: cube with claw marks + BLACKBOX wordmark + red underline -->
-  <svg class="hero-logo" viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg" aria-label="Blackbox logo">
-    <defs>
-      <linearGradient id="clawGrad" x1="0%" y1="100%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#ff2a3a" stop-opacity="0.5"/>
-        <stop offset="100%" stop-color="#ff2a3a" stop-opacity="1"/>
-      </linearGradient>
-      <filter id="redGlow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feMerge>
-          <feMergeNode in="blur"/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-    </defs>
+<!-- Inline SVG logo: neon cube + BLACKBOX wordmark + red underline -->
+<svg class="hero-logo" viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg" aria-label="Blackbox logo">
+  <defs>
+    <filter id="redGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="redGlowSoft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
 
-    <!-- Cube outline -->
-    <g filter="url(#redGlow)">
-      <!-- Top face -->
-      <path d="M 250 60 L 300 35 L 350 60 L 300 85 Z"
-            fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
-      <!-- Left face -->
-      <path d="M 250 60 L 300 85 L 300 155 L 250 130 Z"
-            fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
-      <!-- Right face -->
-      <path d="M 300 85 L 350 60 L 350 130 L 300 155 Z"
-            fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
-    </g>
+  <!-- Ambient glow behind the cube -->
+  <g filter="url(#redGlowSoft)" opacity="0.5">
+    <path d="M 250 60 L 300 35 L 350 60 L 300 85 Z"
+          fill="none" stroke="#ff2a3a" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M 250 60 L 300 85 L 300 155 L 250 130 Z"
+          fill="none" stroke="#ff2a3a" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M 300 85 L 350 60 L 350 130 L 300 155 Z"
+          fill="none" stroke="#ff2a3a" stroke-width="8" stroke-linejoin="round"/>
+  </g>
 
-    <!-- Claw marks (three slashes to the upper-right) -->
-    <g stroke="#ff2a3a" stroke-width="3.5" stroke-linecap="round" fill="none" filter="url(#redGlow)">
-      <path d="M 340 95 L 400 40" stroke="url(#clawGrad)"/>
-      <path d="M 350 110 L 415 45" stroke="url(#clawGrad)"/>
-      <path d="M 360 125 L 425 55" stroke="url(#clawGrad)"/>
-    </g>
+  <!-- Sharp neon cube edges -->
+  <g filter="url(#redGlow)">
+    <!-- Top face -->
+    <path d="M 250 60 L 300 35 L 350 60 L 300 85 Z"
+          fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Left face -->
+    <path d="M 250 60 L 300 85 L 300 155 L 250 130 Z"
+          fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Right face -->
+    <path d="M 300 85 L 350 60 L 350 130 L 300 155 Z"
+          fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
+  </g>
 
-    <!-- Wordmark -->
-    <text x="300" y="215" text-anchor="middle"
-          font-family="Arial Black, Helvetica, sans-serif"
-          font-weight="900" font-size="52"
-          fill="#ffffff" letter-spacing="2">
-      BLACKBOX
-    </text>
+  <!-- Inner highlight on the top face (subtle neon core) -->
+  <path d="M 265 62 L 300 45 L 335 62 L 300 79 Z"
+        fill="rgba(255, 42, 58, 0.08)"/>
 
-    <!-- Underline -->
-    <line x1="160" y1="238" x2="440" y2="238"
-          stroke="#ff2a3a" stroke-width="4" stroke-linecap="square"/>
-  </svg>
+  <!-- Wordmark -->
+  <text x="300" y="215" text-anchor="middle"
+        font-family="Arial Black, Helvetica, sans-serif"
+        font-weight="900" font-size="52"
+        fill="#ffffff" letter-spacing="2">
+    BLACKBOX
+  </text>
+
+  <!-- Underline -->
+  <line x1="160" y1="238" x2="440" y2="238"
+        stroke="#ff2a3a" stroke-width="4" stroke-linecap="square"/>
+</svg>
 
   <p class="tagline">
     A black-box fuzzer for Quai smart contracts. Point it at any deployed contract and it throws
