@@ -645,4 +645,158 @@ function updateStats() {
   list.innerHTML = sorted.map(s => `
     <div class="seed-row">
       <span class="seed-fn">${s.name}</span>
-      <span class="seed-args">(${s
+      <span class="seed-args">(${s.args.map(shortArg).join(', ')})</span>
+      <span class="seed-weight">${s.discoveries}✦</span>
+    </div>
+  `).join('');
+}
+function oneRun() {
+  if (state.run >= state.totalRuns) { finish(); return; }
+  state.run++;
+  let call;
+  if (state.corpus.length > 0 && Math.random() < 0.6) {
+    const totalWeight = state.corpus.reduce((s, x) => s + x.weight, 0);
+    let r = Math.random() * totalWeight;
+    let chosen = state.corpus[0];
+    for (const s of state.corpus) { r -= s.weight; if (r <= 0) { chosen = s; break; } }
+    call = { name: chosen.name, args: [...chosen.args] };
+    if (call.args.length > 0 && Math.random() < 0.4) {
+      const i = randInt(call.args.length);
+      const fn = ABI.find(f => f.name === call.name);
+      call.args[i] = genValue(fn.inputs[i].type);
+    }
+  } else {
+    call = genCall(pick(ABI));
+  }
+  const desc = `${call.name}(${call.args.map(shortArg).join(', ')})`;
+  const before = {
+    fn: new Set(state.signals.fn),
+    sel: new Set(state.signals.sel),
+    reason: new Set(state.signals.reason),
+    gas: new Set(state.signals.gas)
+  };
+  recordSignal('fn', call.name);
+  const result = simulate(call);
+  if (result.kind === 'OK') {
+    state.ok++;
+    log(`<span class="t-dim">[${state.run}/${state.totalRuns}]</span> ${desc} → <span class="t-ok">OK</span> <span class="t-dim">(gas: ${result.gas})</span>`);
+    const bucket = String(result.gas).length;
+    recordSignal('gas', `${call.name}:${bucket}`);
+    const base = state.gasBaselines[call.name];
+    if (base && result.gas > base * 1.8) {
+      state.gasAnoms++;
+      log(`<span class="t-anom">!!! GAS ANOMALY at run ${state.run}: ${call.name}</span>`);
+      log(`<span class="t-anom">    gas=${result.gas} vs baseline=${base} (${(result.gas/base).toFixed(2)}x)</span>`);
+    } else if (!base) {
+      state.gasBaselines[call.name] = result.gas;
+    } else {
+      state.gasBaselines[call.name] = Math.min(base, result.gas);
+    }
+  } else if (result.kind === 'REQUIRE') {
+    state.reverts++;
+    log(`<span class="t-dim">[${state.run}/${state.totalRuns}]</span> ${desc} → <span class="t-warn">REQUIRE</span>: ${result.reason}`);
+    recordSignal('reason', result.reason);
+  } else if (result.kind === 'PANIC') {
+    state.panics++;
+    log(`<span class="t-dim">[${state.run}/${state.totalRuns}]</span> ${desc} → <span class="t-err">PANIC</span>: ${result.reason}`);
+    log(`<span class="t-anom">!!! ANOMALY at run ${state.run}</span>`);
+    log(`<span class="t-anom">  unexpected-revert: PANIC: ${result.reason}</span>`);
+    recordSignal('sel', result.selector);
+    recordSignal('reason', result.reason);
+  } else if (result.kind === 'CUSTOM') {
+    state.reverts++;
+    log(`<span class="t-dim">[${state.run}/${state.totalRuns}]</span> ${desc} → <span class="t-warn">CUSTOM</span>: ${result.reason}`);
+    recordSignal('sel', result.selector);
+    recordSignal('reason', result.reason);
+  }
+  const newSignals = [];
+  for (const k of ['fn', 'sel', 'reason', 'gas']) {
+    for (const v of state.signals[k]) {
+      if (!before[k].has(v)) newSignals.push(`${k}:${v}`);
+    }
+  }
+  if (newSignals.length > 0) {
+    log(`<span class="t-signal">+${newSignals.length} new signal${newSignals.length > 1 ? 's' : ''} from ${desc}</span>`);
+    for (const s of newSignals.slice(0, 4)) log(`<span class="t-signal">    ${s}</span>`);
+    const existing = state.corpus.find(s => s.name === call.name && JSON.stringify(s.args) === JSON.stringify(call.args));
+    if (existing) {
+      existing.weight += newSignals.length * 2;
+      existing.discoveries += newSignals.length;
+    } else {
+      state.corpus.push({
+        name: call.name,
+        args: call.args,
+        weight: 1 + newSignals.length * 2,
+        discoveries: newSignals.length
+      });
+    }
+  } else {
+    const existing = state.corpus.find(s => s.name === call.name && JSON.stringify(s.args) === JSON.stringify(call.args));
+    if (existing) existing.weight = Math.max(1, existing.weight - 0.1);
+  }
+  updateStats();
+  if (state.run >= state.totalRuns) { finish(); return; }
+  state.timer = setTimeout(oneRun, 80);
+}
+function finish() {
+  state.running = false;
+  document.getElementById('statusDot').className = 'dot done';
+  document.getElementById('statusText').textContent = 'complete';
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('btnMinimize').disabled = state.corpus.length < 2;
+  document.getElementById('btnReset').disabled = false;
+  log('');
+  log('<span class="t-head">Session complete.</span>');
+  log(`<span class="t-dim">  Runs: ${state.run}</span>`);
+  log(`<span class="t-dim">  OK: ${state.ok}  Reverts: ${state.reverts}  Panics: ${state.panics}</span>`);
+  log(`<span class="t-dim">  Gas anomalies: ${state.gasAnoms}</span>`);
+  log(`<span class="t-dim">  Corpus size: ${state.corpus.length} seeds</span>`);
+}
+function startFuzzing() {
+  if (state.running) return;
+  state.running = true;
+  document.getElementById('btnStart').disabled = true;
+  document.getElementById('btnReset').disabled = true;
+  document.getElementById('btnMinimize').disabled = true;
+  document.getElementById('statusDot').className = 'dot live';
+  document.getElementById('statusText').textContent = 'fuzzing';
+  log('');
+  log('<span class="t-head">[Blackbox] Target: 0x00735E9B2c731Fd3eCC8129a3653ACb99dF969cC</span>');
+  log('<span class="t-head">[Blackbox] ABI loaded: 6 entries</span>');
+  log('<span class="t-head">[Blackbox] Scanning storage slots... found 3 non-zero</span>');
+  log('');
+  state.timer = setTimeout(oneRun, 200);
+}
+function minimizeCorpus() {
+  const before = state.corpus.length;
+  const keep = Math.max(2, Math.ceil(state.corpus.length * 0.3));
+  state.corpus = [...state.corpus].sort((a,b) => b.weight - a.weight).slice(0, keep);
+  log('');
+  log(`<span class="t-head">[Blackbox] Corpus minimized: ${before} → ${state.corpus.length} seeds (${before - state.corpus.length} removed, 100.0% signal coverage)</span>`);
+  updateStats();
+}
+function reset() {
+  clearTimeout(state.timer);
+  state.running = false;
+  state.run = 0;
+  state.ok = 0; state.reverts = 0; state.panics = 0; state.gasAnoms = 0;
+  state.corpus = [];
+  state.signals = { fn: new Set(), sel: new Set(), reason: new Set(), gas: new Set() };
+  state.gasBaselines = {};
+  term.innerHTML = '';
+  log('<div class="t-dim">Reset. Click "Start Fuzzing" to begin.</div>');
+  log('<div class="t-dim">Target: 0x00735E9B2c731Fd3eCC8129a3653ACb99dF969cC (mock ERC20 on cyprus1)</div>');
+  document.getElementById('statusDot').className = 'dot';
+  document.getElementById('statusText').textContent = 'idle';
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('btnMinimize').disabled = true;
+  document.getElementById('btnReset').disabled = false;
+  updateStats();
+}
+document.getElementById('btnStart').addEventListener('click', startFuzzing);
+document.getElementById('btnMinimize').addEventListener('click', minimizeCorpus);
+document.getElementById('btnReset').addEventListener('click', reset);
+updateStats();
+</script>
+</body>
+</html>
