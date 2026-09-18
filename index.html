@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Blackbox — Black-box fuzzer for Quai smart contracts</title>
 <meta name="description" content="Blackbox is a black-box fuzzer for Quai smart contracts. Throw randomized transactions at any deployed contract — no source code required." />
-<meta property="og:title" content="Blackbox — Black-box fuzzer for Quai" />
-<meta property="og:description" content="Point it at any deployed Quai contract and it throws randomized transactions at it. No source code required." />
-<meta property="og:url" content="https://blackbox-zeta-six.vercel.app" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2308080a'/><path d='M30 35 L50 25 L70 35 L70 65 L50 75 L30 65 Z' fill='none' stroke='%23ff2a3a' stroke-width='4'/></svg>" />
 <style>
   :root {
@@ -20,7 +17,6 @@
     --red: #ff2a3a;
     --red-soft: #ff5566;
     --red-glow: rgba(255, 42, 58, 0.35);
-    --red-dim: rgba(255, 42, 58, 0.15);
     --yellow: #fbbf24;
     --blue: #60a5fa;
     --purple: #c084fc;
@@ -61,14 +57,11 @@
     padding: 0;
     color: var(--red-soft);
   }
-
-  /* ---------- Header ---------- */
   .hero {
     padding: 64px 24px 48px;
     text-align: center;
     border-bottom: 1px solid var(--border);
     background: radial-gradient(ellipse at center top, rgba(255, 42, 58, 0.10), transparent 65%);
-    position: relative;
   }
   .hero-logo {
     max-width: 420px;
@@ -104,7 +97,6 @@
   .btn-primary {
     background: var(--red);
     color: #08080a;
-    box-shadow: 0 0 0 rgba(255, 42, 58, 0);
   }
   .btn-primary:hover {
     box-shadow: 0 0 24px rgba(255, 42, 58, 0.45);
@@ -119,8 +111,6 @@
     border-color: var(--red);
     color: var(--red);
   }
-
-  /* ---------- Content ---------- */
   .wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px; }
   h2 {
     font-size: 13px;
@@ -131,16 +121,12 @@
     font-weight: 600;
   }
   h2:first-child { margin-top: 0; }
-  h2::before {
-    content: '▸ ';
-    color: var(--red);
-  }
+  h2::before { content: '▸ '; color: var(--red); }
   p { color: var(--text); margin: 0 0 14px; }
   ul { padding-left: 20px; color: var(--text); }
   li { margin: 6px 0; }
   li strong { color: var(--text); }
   li .dim { color: var(--dim); }
-
   .features {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -154,37 +140,14 @@
     padding: 16px;
     transition: border-color 0.18s;
   }
-  .feature:hover {
-    border-color: rgba(255, 42, 58, 0.4);
-  }
-  .feature h4 {
-    margin: 0 0 6px;
-    font-size: 13px;
-    color: var(--text);
-    font-weight: 600;
-  }
-  .feature p {
-    margin: 0;
-    color: var(--dim);
-    font-size: 12px;
-    line-height: 1.55;
-  }
-  .feature .icon {
-    color: var(--red);
-    font-size: 16px;
-    margin-bottom: 6px;
-    display: block;
-  }
-
-  .step {
-    display: flex;
-    gap: 14px;
-    margin: 16px 0;
-  }
+  .feature:hover { border-color: rgba(255, 42, 58, 0.4); }
+  .feature h4 { margin: 0 0 6px; font-size: 13px; color: var(--text); font-weight: 600; }
+  .feature p { margin: 0; color: var(--dim); font-size: 12px; line-height: 1.55; }
+  .feature .icon { color: var(--red); font-size: 16px; margin-bottom: 6px; display: block; }
+  .step { display: flex; gap: 14px; margin: 16px 0; }
   .step .num {
     flex-shrink: 0;
-    width: 26px;
-    height: 26px;
+    width: 26px; height: 26px;
     border-radius: 50%;
     background: var(--panel);
     border: 1px solid rgba(255, 42, 58, 0.5);
@@ -196,17 +159,8 @@
     font-weight: 600;
   }
   .step .content { flex: 1; min-width: 0; }
-  .step .content strong {
-    display: block;
-    color: var(--text);
-    margin-bottom: 4px;
-  }
-  .step .content p {
-    color: var(--dim);
-    font-size: 12.5px;
-    margin: 0 0 6px;
-  }
-
+  .step .content strong { display: block; color: var(--text); margin-bottom: 4px; }
+  .step .content p { color: var(--dim); font-size: 12.5px; margin: 0 0 6px; }
   .note {
     background: var(--panel-2);
     border-left: 3px solid var(--red);
@@ -217,8 +171,6 @@
     margin: 16px 0;
   }
   .note strong { color: var(--red-soft); }
-
-  /* ---------- Demo section ---------- */
   .demo-section {
     border-top: 1px solid var(--border);
     background: var(--panel-2);
@@ -226,7 +178,6 @@
   }
   .demo-section .wrap { padding-top: 0; padding-bottom: 32px; }
   .demo-section h2 { margin-top: 0; }
-
   .demo-frame {
     max-width: 1200px;
     margin: 0 auto;
@@ -237,8 +188,6 @@
     background: var(--bg);
     box-shadow: 0 -8px 40px rgba(255, 42, 58, 0.05);
   }
-
-  /* ---------- Demo app styles ---------- */
   .app {
     display: grid;
     grid-template-columns: 1fr 360px;
@@ -268,7 +217,6 @@
   }
   .dot.done { background: var(--red-soft); }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
-
   .terminal {
     flex: 1;
     overflow-y: auto;
@@ -286,7 +234,6 @@
   .t-anom { color: var(--red); font-weight: 600; text-shadow: 0 0 8px var(--red-glow); }
   .t-signal { color: var(--red-soft); }
   .t-head { color: var(--text); font-weight: 600; }
-
   .sidebar {
     background: var(--panel);
     border-left: 1px solid var(--border);
@@ -306,11 +253,7 @@
   }
   .panel { border-bottom: 1px solid var(--border); }
   .panel-body { padding: 0 16px 14px; }
-  .stat {
-    display: flex; justify-content: space-between;
-    padding: 3px 0;
-    font-size: 11.5px;
-  }
+  .stat { display: flex; justify-content: space-between; padding: 3px 0; font-size: 11.5px; }
   .stat .label { color: var(--dim); }
   .stat .val { color: var(--text); font-weight: 500; }
   .stat .val.green { color: var(--green); }
@@ -319,21 +262,13 @@
   .stat .val.blue { color: var(--blue); }
   .stat .val.purple { color: var(--purple); }
   .stat .val.cyan { color: var(--cyan); }
-
-  .bar {
-    height: 6px;
-    background: #16161c;
-    border-radius: 3px;
-    overflow: hidden;
-    margin: 6px 0 2px;
-  }
+  .bar { height: 6px; background: #16161c; border-radius: 3px; overflow: hidden; margin: 6px 0 2px; }
   .bar > div {
     height: 100%;
     background: linear-gradient(90deg, var(--red), var(--red-soft));
     transition: width 0.3s ease;
     box-shadow: 0 0 12px var(--red-glow);
   }
-
   .controls {
     padding: 14px 16px;
     border-top: 1px solid var(--border);
@@ -355,9 +290,7 @@
     cursor: pointer;
     transition: all 0.15s;
   }
-  .controls button:hover:not(:disabled) {
-    box-shadow: 0 0 20px var(--red-glow);
-  }
+  .controls button:hover:not(:disabled) { box-shadow: 0 0 20px var(--red-glow); }
   .controls button:disabled { opacity: 0.4; cursor: not-allowed; }
   .controls button.secondary {
     background: transparent;
@@ -369,12 +302,7 @@
     color: var(--red);
     box-shadow: none;
   }
-
-  .seed-list {
-    font-size: 10.5px;
-    max-height: 160px;
-    overflow-y: auto;
-  }
+  .seed-list { font-size: 10.5px; max-height: 160px; overflow-y: auto; }
   .seed-row {
     display: flex;
     justify-content: space-between;
@@ -386,7 +314,6 @@
   .seed-fn { color: var(--red-soft); flex-shrink: 0; }
   .seed-args { color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .seed-weight { color: var(--yellow); flex-shrink: 0; }
-
   .signal-tag {
     display: inline-block;
     padding: 1px 6px;
@@ -400,8 +327,6 @@
   .signal-tag.sel { color: var(--yellow); }
   .signal-tag.gas { color: var(--cyan); }
   .signal-tag.reason { color: var(--purple); }
-
-  /* ---------- Footer ---------- */
   footer {
     border-top: 1px solid var(--border);
     padding: 32px 24px;
@@ -411,7 +336,6 @@
   }
   footer a { color: var(--dim); }
   footer a:hover { color: var(--red); }
-
   @media (max-width: 800px) {
     .hero { padding: 40px 20px 28px; }
     .hero-logo { max-width: 280px; }
@@ -425,79 +349,50 @@
 </head>
 <body>
 
-<!-- Inline SVG logo: neon cube + BLACKBOX wordmark + red underline -->
-<svg class="hero-logo" viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg" aria-label="Blackbox logo">
-  <defs>
-    <filter id="redGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="3.5" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <filter id="redGlowSoft" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-
-  <!-- Ambient glow behind the cube -->
-  <g filter="url(#redGlowSoft)" opacity="0.5">
-    <path d="M 250 60 L 300 35 L 350 60 L 300 85 Z"
-          fill="none" stroke="#ff2a3a" stroke-width="8" stroke-linejoin="round"/>
-    <path d="M 250 60 L 300 85 L 300 155 L 250 130 Z"
-          fill="none" stroke="#ff2a3a" stroke-width="8" stroke-linejoin="round"/>
-    <path d="M 300 85 L 350 60 L 350 130 L 300 155 Z"
-          fill="none" stroke="#ff2a3a" stroke-width="8" stroke-linejoin="round"/>
-  </g>
-
-  <!-- Sharp neon cube edges -->
-  <g filter="url(#redGlow)">
-    <!-- Top face -->
-    <path d="M 250 60 L 300 35 L 350 60 L 300 85 Z"
-          fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
-    <!-- Left face -->
-    <path d="M 250 60 L 300 85 L 300 155 L 250 130 Z"
-          fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
-    <!-- Right face -->
-    <path d="M 300 85 L 350 60 L 350 130 L 300 155 Z"
-          fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
-  </g>
-
-  <!-- Inner highlight on the top face (subtle neon core) -->
-  <path d="M 265 62 L 300 45 L 335 62 L 300 79 Z"
-        fill="rgba(255, 42, 58, 0.08)"/>
-
-  <!-- Wordmark -->
-  <text x="300" y="215" text-anchor="middle"
-        font-family="Arial Black, Helvetica, sans-serif"
-        font-weight="900" font-size="52"
-        fill="#ffffff" letter-spacing="2">
-    BLACKBOX
-  </text>
-
-  <!-- Underline -->
-  <line x1="160" y1="238" x2="440" y2="238"
-        stroke="#ff2a3a" stroke-width="4" stroke-linecap="square"/>
-</svg>
+<header class="hero">
+  <svg class="hero-logo" viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg" aria-label="Blackbox logo">
+    <defs>
+      <filter id="redGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3.5" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <filter id="redGlowSoft" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="6" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+    <g filter="url(#redGlowSoft)" opacity="0.5">
+      <path d="M 250 60 L 300 35 L 350 60 L 300 85 Z" fill="none" stroke="#ff2a3a" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M 250 60 L 300 85 L 300 155 L 250 130 Z" fill="none" stroke="#ff2a3a" stroke-width="8" stroke-linejoin="round"/>
+      <path d="M 300 85 L 350 60 L 350 130 L 300 155 Z" fill="none" stroke="#ff2a3a" stroke-width="8" stroke-linejoin="round"/>
+    </g>
+    <g filter="url(#redGlow)">
+      <path d="M 250 60 L 300 35 L 350 60 L 300 85 Z" fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M 250 60 L 300 85 L 300 155 L 250 130 Z" fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M 300 85 L 350 60 L 350 130 L 300 155 Z" fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
+    </g>
+    <path d="M 265 62 L 300 45 L 335 62 L 300 79 Z" fill="rgba(255, 42, 58, 0.08)"/>
+    <text x="300" y="215" text-anchor="middle" font-family="Arial Black, Helvetica, sans-serif" font-weight="900" font-size="52" fill="#ffffff" letter-spacing="2">BLACKBOX</text>
+    <line x1="160" y1="238" x2="440" y2="238" stroke="#ff2a3a" stroke-width="4" stroke-linecap="square"/>
+  </svg>
 
   <p class="tagline">
     A black-box fuzzer for Quai smart contracts. Point it at any deployed contract and it throws
     randomized transactions at it — no source code required.
   </p>
   <div class="cta">
-    <a class="btn btn-primary" href="https://github.com/swimgood/blackbox" target="_blank" rel="noopener">
-      View on GitHub →
-    </a>
+    <a class="btn btn-primary" href="https://github.com/swimgood/blackbox" target="_blank" rel="noopener">View on GitHub →</a>
     <a class="btn btn-secondary" href="#demo">Try the demo</a>
   </div>
 </header>
 
-<!-- ============ CONTENT ============ -->
 <main class="wrap">
 
   <h2>What it does</h2>
@@ -588,7 +483,6 @@ npm run build</code></pre>
 
 </main>
 
-<!-- ============ DEMO ============ -->
 <section class="demo-section" id="demo">
   <div class="wrap">
     <h2>Interactive demo</h2>
@@ -615,7 +509,6 @@ npm run build</code></pre>
           <div>&nbsp;</div>
         </div>
       </div>
-
       <div class="sidebar">
         <div class="panel">
           <h3>Session</h3>
@@ -628,7 +521,6 @@ npm run build</code></pre>
             <div class="stat"><span class="label">Gas anomalies</span><span class="val purple" id="statGas">0</span></div>
           </div>
         </div>
-
         <div class="panel">
           <h3>Corpus</h3>
           <div class="panel-body">
@@ -637,14 +529,12 @@ npm run build</code></pre>
             <div class="seed-list" id="seedList"></div>
           </div>
         </div>
-
         <div class="panel">
           <h3>Signals</h3>
           <div class="panel-body">
             <div id="signalTags" class="t-dim" style="font-size:11px;">none yet</div>
           </div>
         </div>
-
         <div class="controls">
           <button id="btnStart">▶ Start Fuzzing</button>
           <button id="btnMinimize" class="secondary" disabled>⊟ Minimize Corpus</button>
@@ -655,7 +545,6 @@ npm run build</code></pre>
   </div>
 </section>
 
-<!-- ============ FOOTER ============ -->
 <footer>
   <p>
     <a href="https://github.com/swimgood/blackbox" target="_blank" rel="noopener">github.com/swimgood/blackbox</a>
@@ -675,22 +564,16 @@ const ABI = [
   { name: 'burn',         inputs: [{type:'uint256'}] },
   { name: 'renounceOwnership', inputs: [] }
 ];
-
 const MAX_UINT = '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 const ZERO_ADDR = '0x0000000000000000000000000000000000000000';
-
 const term = document.getElementById('terminal');
 const state = {
-  running: false,
-  run: 0,
-  totalRuns: 100,
+  running: false, run: 0, totalRuns: 100,
   ok: 0, reverts: 0, panics: 0, gasAnoms: 0,
   corpus: [],
   signals: { fn: new Set(), sel: new Set(), reason: new Set(), gas: new Set() },
-  gasBaselines: {},
-  timer: null
+  gasBaselines: {}, timer: null
 };
-
 function log(html, cls = '') {
   const div = document.createElement('div');
   div.className = cls;
@@ -698,10 +581,8 @@ function log(html, cls = '') {
   term.appendChild(div);
   term.scrollTop = term.scrollHeight;
 }
-
 function randInt(n) { return Math.floor(Math.random() * n); }
 function pick(arr) { return arr[randInt(arr.length)]; }
-
 function genValue(type) {
   const boundary = Math.random() < 0.25;
   if (type === 'address') {
@@ -714,48 +595,28 @@ function genValue(type) {
   }
   return '0x0';
 }
-
 function shortArg(a) {
   if (a.length > 14) return a.slice(0, 8) + '…' + a.slice(-4);
   return a;
 }
-
 function genCall(fn) {
   return { name: fn.name, args: fn.inputs.map(i => genValue(i.type)) };
 }
-
 function simulate(call) {
   const { name, args } = call;
-  if (name === 'transfer' && args[0] === ZERO_ADDR) {
-    return { kind: 'REQUIRE', reason: 'ERC20: transfer to the zero address' };
-  }
-  if (name === 'approve' && args[0] === ZERO_ADDR && args[1] === MAX_UINT) {
-    return { kind: 'REQUIRE', reason: 'ERC20: approve to the zero address' };
-  }
-  if (name === 'transferFrom' && Math.random() < 0.4) {
-    return { kind: 'REQUIRE', reason: 'ERC20: insufficient allowance' };
-  }
-  if (name === 'burn' && args[0] === MAX_UINT) {
-    return { kind: 'PANIC', reason: 'arithmetic overflow or underflow', selector: '0x4e487b71' };
-  }
-  if (name === 'mint' && args[1] === MAX_UINT) {
-    return { kind: 'PANIC', reason: 'arithmetic overflow or underflow', selector: '0x4e487b71' };
-  }
-  if (name === 'renounceOwnership' && Math.random() < 0.3) {
-    return { kind: 'CUSTOM', reason: 'OwnableUnauthorizedAccount(0x…)', selector: '0x118cdaa7' };
-  }
+  if (name === 'transfer' && args[0] === ZERO_ADDR) return { kind: 'REQUIRE', reason: 'ERC20: transfer to the zero address' };
+  if (name === 'approve' && args[0] === ZERO_ADDR && args[1] === MAX_UINT) return { kind: 'REQUIRE', reason: 'ERC20: approve to the zero address' };
+  if (name === 'transferFrom' && Math.random() < 0.4) return { kind: 'REQUIRE', reason: 'ERC20: insufficient allowance' };
+  if (name === 'burn' && args[0] === MAX_UINT) return { kind: 'PANIC', reason: 'arithmetic overflow or underflow', selector: '0x4e487b71' };
+  if (name === 'mint' && args[1] === MAX_UINT) return { kind: 'PANIC', reason: 'arithmetic overflow or underflow', selector: '0x4e487b71' };
+  if (name === 'renounceOwnership' && Math.random() < 0.3) return { kind: 'CUSTOM', reason: 'OwnableUnauthorizedAccount(0x…)', selector: '0x118cdaa7' };
   const baseGas = { transfer: 34211, approve: 29003, transferFrom: 45000, mint: 52000, burn: 31000, renounceOwnership: 28000 }[name] || 30000;
   return { kind: 'OK', gas: baseGas + randInt(3000) };
 }
-
 function recordSignal(kind, value) {
-  if (!state.signals[kind].has(value)) {
-    state.signals[kind].add(value);
-    return true;
-  }
+  if (!state.signals[kind].has(value)) { state.signals[kind].add(value); return true; }
   return false;
 }
-
 function updateStats() {
   document.getElementById('statRuns').textContent = state.run;
   document.getElementById('statOk').textContent = state.ok;
@@ -766,4 +627,22 @@ function updateStats() {
   const totalSignals = state.signals.fn.size + state.signals.sel.size + state.signals.reason.size + state.signals.gas.size;
   document.getElementById('statSignals').textContent = totalSignals;
   document.getElementById('progressBar').style.width = (state.run / state.totalRuns * 100) + '%';
-  document.getElementById('runCounter').textContent = `run ${state.run} / ${state.total
+  document.getElementById('runCounter').textContent = `run ${state.run} / ${state.totalRuns}`;
+  const tags = document.getElementById('signalTags');
+  const all = [
+    ...[...state.signals.fn].map(s => ['fn', s]),
+    ...[...state.signals.sel].map(s => ['sel', s]),
+    ...[...state.signals.reason].map(s => ['reason', s.slice(0, 30)]),
+    ...[...state.signals.gas].map(s => ['gas', s])
+  ];
+  if (all.length === 0) { tags.textContent = 'none yet'; tags.className = 't-dim'; }
+  else {
+    tags.className = '';
+    tags.innerHTML = all.slice(0, 30).map(([k, v]) => `<span class="signal-tag ${k}">${v}</span>`).join('');
+  }
+  const list = document.getElementById('seedList');
+  const sorted = [...state.corpus].sort((a,b) => b.weight - a.weight).slice(0, 8);
+  list.innerHTML = sorted.map(s => `
+    <div class="seed-row">
+      <span class="seed-fn">${s.name}</span>
+      <span class="seed-args">(${s
