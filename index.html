@@ -8,21 +8,24 @@
 <meta property="og:title" content="Blackbox — Black-box fuzzer for Quai" />
 <meta property="og:description" content="Point it at any deployed Quai contract and it throws randomized transactions at it. No source code required." />
 <meta property="og:url" content="https://blackbox-zeta-six.vercel.app" />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬛</text></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2308080a'/><path d='M30 35 L50 25 L70 35 L70 65 L50 75 L30 65 Z' fill='none' stroke='%23ff2a3a' stroke-width='4'/></svg>" />
 <style>
   :root {
-    --bg: #0a0e14;
-    --panel: #111721;
-    --panel-2: #0d131c;
-    --border: #1e2733;
-    --text: #d4dbe5;
-    --dim: #6b7685;
-    --green: #4ade80;
-    --red: #f87171;
+    --bg: #08080a;
+    --panel: #0f0f12;
+    --panel-2: #0b0b0e;
+    --border: #1c1c22;
+    --text: #e4e4e8;
+    --dim: #6e6e78;
+    --red: #ff2a3a;
+    --red-soft: #ff5566;
+    --red-glow: rgba(255, 42, 58, 0.35);
+    --red-dim: rgba(255, 42, 58, 0.15);
     --yellow: #fbbf24;
     --blue: #60a5fa;
     --purple: #c084fc;
     --cyan: #22d3ee;
+    --green: #4ade80;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -33,7 +36,7 @@
     font-size: 13px;
     line-height: 1.6;
   }
-  a { color: var(--green); text-decoration: none; }
+  a { color: var(--red); text-decoration: none; }
   a:hover { text-decoration: underline; }
   code {
     background: var(--panel);
@@ -41,7 +44,7 @@
     padding: 1px 5px;
     border-radius: 3px;
     font-size: 12px;
-    color: var(--cyan);
+    color: var(--red-soft);
   }
   pre {
     background: var(--panel);
@@ -56,28 +59,31 @@
     background: none;
     border: none;
     padding: 0;
-    color: var(--cyan);
+    color: var(--red-soft);
   }
 
   /* ---------- Header ---------- */
   .hero {
-    padding: 64px 24px 40px;
+    padding: 64px 24px 48px;
     text-align: center;
     border-bottom: 1px solid var(--border);
-    background: radial-gradient(ellipse at top, rgba(74, 222, 128, 0.06), transparent 60%);
+    background: radial-gradient(ellipse at center top, rgba(255, 42, 58, 0.10), transparent 65%);
+    position: relative;
   }
-  .hero .wordmark {
-    font-size: 44px;
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    margin: 0 0 8px;
+  .hero-logo {
+    max-width: 420px;
+    width: 100%;
+    height: auto;
+    margin: 0 auto 28px;
+    display: block;
+    filter: drop-shadow(0 0 24px rgba(255, 42, 58, 0.35));
   }
-  .hero .wordmark span { color: var(--green); }
   .hero .tagline {
     color: var(--dim);
     font-size: 15px;
     max-width: 620px;
-    margin: 0 auto 28px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
   }
   .hero .cta {
     display: flex;
@@ -92,16 +98,27 @@
     font-size: 13px;
     font-weight: 600;
     text-decoration: none;
-    transition: opacity 0.15s;
+    transition: all 0.18s;
   }
-  .btn:hover { text-decoration: none; opacity: 0.85; }
-  .btn-primary { background: var(--green); color: #0a0e14; }
+  .btn:hover { text-decoration: none; }
+  .btn-primary {
+    background: var(--red);
+    color: #08080a;
+    box-shadow: 0 0 0 rgba(255, 42, 58, 0);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 24px rgba(255, 42, 58, 0.45);
+    opacity: 0.95;
+  }
   .btn-secondary {
     background: transparent;
     color: var(--text);
     border: 1px solid var(--border);
   }
-  .btn-secondary:hover { border-color: var(--dim); }
+  .btn-secondary:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
 
   /* ---------- Content ---------- */
   .wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px; }
@@ -114,6 +131,10 @@
     font-weight: 600;
   }
   h2:first-child { margin-top: 0; }
+  h2::before {
+    content: '▸ ';
+    color: var(--red);
+  }
   p { color: var(--text); margin: 0 0 14px; }
   ul { padding-left: 20px; color: var(--text); }
   li { margin: 6px 0; }
@@ -131,6 +152,10 @@
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 16px;
+    transition: border-color 0.18s;
+  }
+  .feature:hover {
+    border-color: rgba(255, 42, 58, 0.4);
   }
   .feature h4 {
     margin: 0 0 6px;
@@ -145,7 +170,7 @@
     line-height: 1.55;
   }
   .feature .icon {
-    color: var(--green);
+    color: var(--red);
     font-size: 16px;
     margin-bottom: 6px;
     display: block;
@@ -162,8 +187,8 @@
     height: 26px;
     border-radius: 50%;
     background: var(--panel);
-    border: 1px solid var(--border);
-    color: var(--green);
+    border: 1px solid rgba(255, 42, 58, 0.5);
+    color: var(--red);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -184,14 +209,14 @@
 
   .note {
     background: var(--panel-2);
-    border-left: 3px solid var(--yellow);
+    border-left: 3px solid var(--red);
     padding: 12px 14px;
     border-radius: 4px;
     color: var(--dim);
     font-size: 12.5px;
     margin: 16px 0;
   }
-  .note strong { color: var(--yellow); }
+  .note strong { color: var(--red-soft); }
 
   /* ---------- Demo section ---------- */
   .demo-section {
@@ -210,9 +235,10 @@
     border-radius: 8px 8px 0 0;
     overflow: hidden;
     background: var(--bg);
+    box-shadow: 0 -8px 40px rgba(255, 42, 58, 0.05);
   }
 
-  /* ---------- Demo app styles (scoped) ---------- */
+  /* ---------- Demo app styles ---------- */
   .app {
     display: grid;
     grid-template-columns: 1fr 360px;
@@ -235,8 +261,12 @@
     width: 8px; height: 8px; border-radius: 50%;
     background: var(--dim); display: inline-block; margin-right: 6px;
   }
-  .dot.live { background: var(--green); animation: pulse 1.5s infinite; }
-  .dot.done { background: var(--blue); }
+  .dot.live {
+    background: var(--red);
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 8px var(--red);
+  }
+  .dot.done { background: var(--red-soft); }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 
   .terminal {
@@ -253,8 +283,8 @@
   .t-warn { color: var(--yellow); }
   .t-err { color: var(--red); }
   .t-info { color: var(--cyan); }
-  .t-anom { color: var(--purple); font-weight: 600; }
-  .t-signal { color: var(--blue); }
+  .t-anom { color: var(--red); font-weight: 600; text-shadow: 0 0 8px var(--red-glow); }
+  .t-signal { color: var(--red-soft); }
   .t-head { color: var(--text); font-weight: 600; }
 
   .sidebar {
@@ -292,15 +322,16 @@
 
   .bar {
     height: 6px;
-    background: #1a2230;
+    background: #16161c;
     border-radius: 3px;
     overflow: hidden;
     margin: 6px 0 2px;
   }
   .bar > div {
     height: 100%;
-    background: linear-gradient(90deg, var(--green), var(--cyan));
+    background: linear-gradient(90deg, var(--red), var(--red-soft));
     transition: width 0.3s ease;
+    box-shadow: 0 0 12px var(--red-glow);
   }
 
   .controls {
@@ -313,8 +344,8 @@
     flex-shrink: 0;
   }
   .controls button {
-    background: var(--green);
-    color: #0a0e14;
+    background: var(--red);
+    color: #08080a;
     border: none;
     padding: 10px 14px;
     font-family: inherit;
@@ -322,16 +353,22 @@
     font-weight: 600;
     border-radius: 4px;
     cursor: pointer;
-    transition: opacity 0.15s;
+    transition: all 0.15s;
   }
-  .controls button:hover:not(:disabled) { opacity: 0.85; }
+  .controls button:hover:not(:disabled) {
+    box-shadow: 0 0 20px var(--red-glow);
+  }
   .controls button:disabled { opacity: 0.4; cursor: not-allowed; }
   .controls button.secondary {
     background: transparent;
     color: var(--text);
     border: 1px solid var(--border);
   }
-  .controls button.secondary:hover:not(:disabled) { border-color: var(--dim); }
+  .controls button.secondary:hover:not(:disabled) {
+    border-color: var(--red);
+    color: var(--red);
+    box-shadow: none;
+  }
 
   .seed-list {
     font-size: 10.5px;
@@ -342,11 +379,11 @@
     display: flex;
     justify-content: space-between;
     padding: 3px 0;
-    border-bottom: 1px solid #151c26;
+    border-bottom: 1px solid #14141a;
     gap: 8px;
   }
   .seed-row:last-child { border-bottom: none; }
-  .seed-fn { color: var(--cyan); flex-shrink: 0; }
+  .seed-fn { color: var(--red-soft); flex-shrink: 0; }
   .seed-args { color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .seed-weight { color: var(--yellow); flex-shrink: 0; }
 
@@ -354,14 +391,14 @@
     display: inline-block;
     padding: 1px 6px;
     margin: 2px 3px 2px 0;
-    background: #1a2230;
+    background: #18181e;
     border-radius: 3px;
     font-size: 10px;
-    color: var(--blue);
+    color: var(--red-soft);
   }
-  .signal-tag.fn { color: var(--cyan); }
-  .signal-tag.sel { color: var(--red); }
-  .signal-tag.gas { color: var(--yellow); }
+  .signal-tag.fn { color: var(--red); }
+  .signal-tag.sel { color: var(--yellow); }
+  .signal-tag.gas { color: var(--cyan); }
   .signal-tag.reason { color: var(--purple); }
 
   /* ---------- Footer ---------- */
@@ -373,11 +410,11 @@
     font-size: 11.5px;
   }
   footer a { color: var(--dim); }
-  footer a:hover { color: var(--green); }
+  footer a:hover { color: var(--red); }
 
   @media (max-width: 800px) {
     .hero { padding: 40px 20px 28px; }
-    .hero .wordmark { font-size: 32px; }
+    .hero-logo { max-width: 280px; }
     .hero .tagline { font-size: 14px; }
     .features { grid-template-columns: 1fr; }
     .app { grid-template-columns: 1fr; height: auto; }
@@ -390,7 +427,55 @@
 
 <!-- ============ HERO ============ -->
 <header class="hero">
-  <h1 class="wordmark">black<span>box</span></h1>
+  <!-- Inline SVG logo: cube with claw marks + BLACKBOX wordmark + red underline -->
+  <svg class="hero-logo" viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg" aria-label="Blackbox logo">
+    <defs>
+      <linearGradient id="clawGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ff2a3a" stop-opacity="0.5"/>
+        <stop offset="100%" stop-color="#ff2a3a" stop-opacity="1"/>
+      </linearGradient>
+      <filter id="redGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Cube outline -->
+    <g filter="url(#redGlow)">
+      <!-- Top face -->
+      <path d="M 250 60 L 300 35 L 350 60 L 300 85 Z"
+            fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
+      <!-- Left face -->
+      <path d="M 250 60 L 300 85 L 300 155 L 250 130 Z"
+            fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
+      <!-- Right face -->
+      <path d="M 300 85 L 350 60 L 350 130 L 300 155 Z"
+            fill="none" stroke="#ff2a3a" stroke-width="3" stroke-linejoin="round"/>
+    </g>
+
+    <!-- Claw marks (three slashes to the upper-right) -->
+    <g stroke="#ff2a3a" stroke-width="3.5" stroke-linecap="round" fill="none" filter="url(#redGlow)">
+      <path d="M 340 95 L 400 40" stroke="url(#clawGrad)"/>
+      <path d="M 350 110 L 415 45" stroke="url(#clawGrad)"/>
+      <path d="M 360 125 L 425 55" stroke="url(#clawGrad)"/>
+    </g>
+
+    <!-- Wordmark -->
+    <text x="300" y="215" text-anchor="middle"
+          font-family="Arial Black, Helvetica, sans-serif"
+          font-weight="900" font-size="52"
+          fill="#ffffff" letter-spacing="2">
+      BLACKBOX
+    </text>
+
+    <!-- Underline -->
+    <line x1="160" y1="238" x2="440" y2="238"
+          stroke="#ff2a3a" stroke-width="4" stroke-linecap="square"/>
+  </svg>
+
   <p class="tagline">
     A black-box fuzzer for Quai smart contracts. Point it at any deployed contract and it throws
     randomized transactions at it — no source code required.
@@ -452,7 +537,7 @@
     <div class="content">
       <strong>Clone the repo</strong>
       <pre><code>git clone https://github.com/swimgood/blackbox.git
-cd blackbox/blackbox-fuzz</code></pre>
+cd blackbox</code></pre>
     </div>
   </div>
 
@@ -672,190 +757,4 @@ function updateStats() {
   const totalSignals = state.signals.fn.size + state.signals.sel.size + state.signals.reason.size + state.signals.gas.size;
   document.getElementById('statSignals').textContent = totalSignals;
   document.getElementById('progressBar').style.width = (state.run / state.totalRuns * 100) + '%';
-  document.getElementById('runCounter').textContent = `run ${state.run} / ${state.totalRuns}`;
-
-  const tags = document.getElementById('signalTags');
-  const all = [
-    ...[...state.signals.fn].map(s => ['fn', s]),
-    ...[...state.signals.sel].map(s => ['sel', s]),
-    ...[...state.signals.reason].map(s => ['reason', s.slice(0, 30)]),
-    ...[...state.signals.gas].map(s => ['gas', s])
-  ];
-  if (all.length === 0) {
-    tags.textContent = 'none yet';
-    tags.className = 't-dim';
-  } else {
-    tags.className = '';
-    tags.innerHTML = all.slice(0, 30).map(([k, v]) => `<span class="signal-tag ${k}">${v}</span>`).join('');
-  }
-
-  const list = document.getElementById('seedList');
-  const sorted = [...state.corpus].sort((a,b) => b.weight - a.weight).slice(0, 8);
-  list.innerHTML = sorted.map(s => `
-    <div class="seed-row">
-      <span class="seed-fn">${s.name}</span>
-      <span class="seed-args">(${s.args.map(shortArg).join(', ')})</span>
-      <span class="seed-weight">${s.discoveries}✦</span>
-    </div>
-  `).join('');
-}
-
-function oneRun() {
-  if (state.run >= state.totalRuns) { finish(); return; }
-  state.run++;
-
-  let call;
-  if (state.corpus.length > 0 && Math.random() < 0.6) {
-    const totalWeight = state.corpus.reduce((s, x) => s + x.weight, 0);
-    let r = Math.random() * totalWeight;
-    let chosen = state.corpus[0];
-    for (const s of state.corpus) { r -= s.weight; if (r <= 0) { chosen = s; break; } }
-    call = { name: chosen.name, args: [...chosen.args] };
-    if (call.args.length > 0 && Math.random() < 0.4) {
-      const i = randInt(call.args.length);
-      const fn = ABI.find(f => f.name === call.name);
-      call.args[i] = genValue(fn.inputs[i].type);
-    }
-  } else {
-    call = genCall(pick(ABI));
-  }
-
-  const desc = `${call.name}(${call.args.map(shortArg).join(', ')})`;
-  const before = { fn: new Set(state.signals.fn), sel: new Set(state.signals.sel), reason: new Set(state.signals.reason), gas: new Set(state.signals.gas) };
-
-  recordSignal('fn', call.name);
-  const result = simulate(call);
-
-  if (result.kind === 'OK') {
-    state.ok++;
-    log(`<span class="t-dim">[${state.run}/${state.totalRuns}]</span> ${desc} → <span class="t-ok">OK</span> <span class="t-dim">(gas: ${result.gas})</span>`);
-    const bucket = String(result.gas).length;
-    recordSignal('gas', `${call.name}:${bucket}`);
-    const base = state.gasBaselines[call.name];
-    if (base && result.gas > base * 1.8) {
-      state.gasAnoms++;
-      log(`<span class="t-anom">!!! GAS ANOMALY at run ${state.run}: ${call.name}</span>`);
-      log(`<span class="t-anom">    gas=${result.gas} vs baseline=${base} (${(result.gas/base).toFixed(2)}x)</span>`);
-    } else if (!base) {
-      state.gasBaselines[call.name] = result.gas;
-    } else {
-      state.gasBaselines[call.name] = Math.min(base, result.gas);
-    }
-  } else if (result.kind === 'REQUIRE') {
-    state.reverts++;
-    log(`<span class="t-dim">[${state.run}/${state.totalRuns}]</span> ${desc} → <span class="t-warn">REQUIRE</span>: ${result.reason}`);
-    recordSignal('reason', result.reason);
-  } else if (result.kind === 'PANIC') {
-    state.panics++;
-    log(`<span class="t-dim">[${state.run}/${state.totalRuns}]</span> ${desc} → <span class="t-err">PANIC</span>: ${result.reason}`);
-    log(`<span class="t-anom">!!! ANOMALY at run ${state.run}</span>`);
-    log(`<span class="t-anom">  unexpected-revert: PANIC: ${result.reason}</span>`);
-    recordSignal('sel', result.selector);
-    recordSignal('reason', result.reason);
-  } else if (result.kind === 'CUSTOM') {
-    state.reverts++;
-    log(`<span class="t-dim">[${state.run}/${state.totalRuns}]</span> ${desc} → <span class="t-warn">CUSTOM</span>: ${result.reason}`);
-    recordSignal('sel', result.selector);
-    recordSignal('reason', result.reason);
-  }
-
-  const newSignals = [];
-  for (const k of ['fn', 'sel', 'reason', 'gas']) {
-    for (const v of state.signals[k]) {
-      if (!before[k].has(v)) newSignals.push(`${k}:${v}`);
-    }
-  }
-
-  if (newSignals.length > 0) {
-    log(`<span class="t-signal">+${newSignals.length} new signal${newSignals.length > 1 ? 's' : ''} from ${desc}</span>`);
-    for (const s of newSignals.slice(0, 4)) log(`<span class="t-signal">    ${s}</span>`);
-    const existing = state.corpus.find(s => s.name === call.name && JSON.stringify(s.args) === JSON.stringify(call.args));
-    if (existing) {
-      existing.weight += newSignals.length * 2;
-      existing.discoveries += newSignals.length;
-    } else {
-      state.corpus.push({
-        name: call.name,
-        args: call.args,
-        weight: 1 + newSignals.length * 2,
-        discoveries: newSignals.length
-      });
-    }
-  } else {
-    const existing = state.corpus.find(s => s.name === call.name && JSON.stringify(s.args) === JSON.stringify(call.args));
-    if (existing) existing.weight = Math.max(1, existing.weight - 0.1);
-  }
-
-  updateStats();
-
-  if (state.run >= state.totalRuns) { finish(); return; }
-  state.timer = setTimeout(oneRun, 80);
-}
-
-function finish() {
-  state.running = false;
-  document.getElementById('statusDot').className = 'dot done';
-  document.getElementById('statusText').textContent = 'complete';
-  document.getElementById('btnStart').disabled = false;
-  document.getElementById('btnMinimize').disabled = state.corpus.length < 2;
-  document.getElementById('btnReset').disabled = false;
-  log('');
-  log('<span class="t-head">Session complete.</span>');
-  log(`<span class="t-dim">  Runs: ${state.run}</span>`);
-  log(`<span class="t-dim">  OK: ${state.ok}  Reverts: ${state.reverts}  Panics: ${state.panics}</span>`);
-  log(`<span class="t-dim">  Gas anomalies: ${state.gasAnoms}</span>`);
-  log(`<span class="t-dim">  Corpus size: ${state.corpus.length} seeds</span>`);
-}
-
-function startFuzzing() {
-  if (state.running) return;
-  state.running = true;
-  document.getElementById('btnStart').disabled = true;
-  document.getElementById('btnReset').disabled = true;
-  document.getElementById('btnMinimize').disabled = true;
-  document.getElementById('statusDot').className = 'dot live';
-  document.getElementById('statusText').textContent = 'fuzzing';
-  log('');
-  log('<span class="t-head">[Blackbox] Target: 0x00735E9B2c731Fd3eCC8129a3653ACb99dF969cC</span>');
-  log('<span class="t-head">[Blackbox] ABI loaded: 6 entries</span>');
-  log('<span class="t-head">[Blackbox] Scanning storage slots... found 3 non-zero</span>');
-  log('');
-  state.timer = setTimeout(oneRun, 200);
-}
-
-function minimizeCorpus() {
-  const before = state.corpus.length;
-  const keep = Math.max(2, Math.ceil(state.corpus.length * 0.3));
-  state.corpus = [...state.corpus].sort((a,b) => b.weight - a.weight).slice(0, keep);
-  log('');
-  log(`<span class="t-head">[Blackbox] Corpus minimized: ${before} → ${state.corpus.length} seeds (${before - state.corpus.length} removed, 100.0% signal coverage)</span>`);
-  updateStats();
-}
-
-function reset() {
-  clearTimeout(state.timer);
-  state.running = false;
-  state.run = 0;
-  state.ok = 0; state.reverts = 0; state.panics = 0; state.gasAnoms = 0;
-  state.corpus = [];
-  state.signals = { fn: new Set(), sel: new Set(), reason: new Set(), gas: new Set() };
-  state.gasBaselines = {};
-  term.innerHTML = '';
-  log('<div class="t-dim">Reset. Click "Start Fuzzing" to begin.</div>');
-  log('<div class="t-dim">Target: 0x00735E9B2c731Fd3eCC8129a3653ACb99dF969cC (mock ERC20 on cyprus1)</div>');
-  document.getElementById('statusDot').className = 'dot';
-  document.getElementById('statusText').textContent = 'idle';
-  document.getElementById('btnStart').disabled = false;
-  document.getElementById('btnMinimize').disabled = true;
-  document.getElementById('btnReset').disabled = false;
-  updateStats();
-}
-
-document.getElementById('btnStart').addEventListener('click', startFuzzing);
-document.getElementById('btnMinimize').addEventListener('click', minimizeCorpus);
-document.getElementById('btnReset').addEventListener('click', reset);
-
-updateStats();
-</script>
-</body>
-</html>
+  document.getElementById('runCounter').textContent = `run ${state.run} / ${state.total
